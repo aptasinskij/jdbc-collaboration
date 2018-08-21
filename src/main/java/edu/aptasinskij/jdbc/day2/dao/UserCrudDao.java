@@ -21,9 +21,7 @@ public class UserCrudDao implements CrudDao<User, Long> {
 
     //utility method for Connection retrieval
     private Connection getConnection() throws SQLException {
-        Connection connection = DriverManager.getConnection(DatabaseProperties.DATABASE_URL, DatabaseProperties.USERNAME, DatabaseProperties.SECRET);
-        connection.setAutoCommit(false); //disabling auto-committing feature of JDBC
-        return connection;
+        return DriverManager.getConnection(DatabaseProperties.DATABASE_URL, DatabaseProperties.USERNAME, DatabaseProperties.SECRET);
     }
 
     /*
@@ -34,6 +32,7 @@ public class UserCrudDao implements CrudDao<User, Long> {
 
         try (Connection connection = getConnection(); // open new connection
              PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER_SQL)) { //prepare new statement (actual SQL passed to DB at this point)
+            connection.setAutoCommit(false); //disabling auto-committing feature of JDBC
             preparedStatement.setString(1, entity.getUsername());
             preparedStatement.setString(2, entity.getPassword());
             preparedStatement.execute(); //actual execution of statement
@@ -49,6 +48,7 @@ public class UserCrudDao implements CrudDao<User, Long> {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID_SQL)) {
             preparedStatement.setLong(1, id);
+            connection.setAutoCommit(false); //disabling auto-committing feature of JDBC
             resultSet = preparedStatement.executeQuery(); //actual query execution
             /*resultSet.setFetchSize(1); //if the was multiple records satisfying the SQL, trim them to size of 1*/
             if (resultSet.next()) { //if result contains any record
