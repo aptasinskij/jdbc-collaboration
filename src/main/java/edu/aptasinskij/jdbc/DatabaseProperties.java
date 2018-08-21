@@ -8,4 +8,9 @@ public class DatabaseProperties {
 
     public static final String SECRET = "digitalNight";
 
+    private DatabaseProperties() {
+        throw new UnsupportedOperationException("Utility class");
+    }
+
+
 }
