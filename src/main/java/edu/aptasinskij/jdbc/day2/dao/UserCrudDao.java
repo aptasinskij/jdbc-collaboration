@@ -7,7 +7,7 @@ import java.sql.*;
 
 /**
  * DAO implementation for @see {@link User} with identifier @see {@link Long}
- * */
+ */
 public class UserCrudDao implements CrudDao<User, Long> {
 
     // SQL for inserting new user record
@@ -15,6 +15,10 @@ public class UserCrudDao implements CrudDao<User, Long> {
 
     //SQL for selecting user record by id
     private static final String SELECT_USER_BY_ID_SQL = "SELECT * FROM users WHERE id = ? LIMIT 1";
+
+    private static final String DELETE_USER_BY_ID_SQL = "DELETE FROM users where id = ?";
+
+    private static final String UPDATE_USER_PASS_BY_USERNAME = "UPDATE users SET password = ? WHERE username = ?";
 
     //just error message to avoid code duplication
     private static final String EXCEPTION_MESSAGE = "Exception...";
@@ -25,8 +29,8 @@ public class UserCrudDao implements CrudDao<User, Long> {
     }
 
     /*
-    * Create user method implementation
-    * */
+     * Create user method implementation
+     * */
     @Override
     public void create(User entity) {
 
@@ -76,12 +80,31 @@ public class UserCrudDao implements CrudDao<User, Long> {
 
     @Override
     public void update(User entity) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        //throw new UnsupportedOperationException("Not implemented yet");
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_PASS_BY_USERNAME)) {
+
+            connection.setAutoCommit(false);
+
+
+
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_MESSAGE);
+        }
+
     }
 
     @Override
     public void delete(User entity) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID_SQL)) {
+            preparedStatement.setLong(1, entity.getId());
+            connection.setAutoCommit(false);
+            preparedStatement.execute();
+            connection.commit();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_MESSAGE);
+        }
     }
 
 }
