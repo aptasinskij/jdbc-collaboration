@@ -6,7 +6,7 @@ public class DatabaseProperties {
 
     public static final String USERNAME = "root";
 
-    public static final String SECRET = "digitalNight";
+    public static final String SECRET = "11111111";
 
     private DatabaseProperties() {
         throw new UnsupportedOperationException("Utility class");
